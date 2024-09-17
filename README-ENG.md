@@ -2,6 +2,11 @@
 
 Welcome to the **Steven Universe Memory Game**, a memory game project inspired by the _Steven Universe_ universe. This game is being developed in Python using the `tkinter` library for the graphical interface. The goal is to create a fun game where players can test their memory skills by matching iconic characters from the animated series!
 
+## 🌐 Languages
+
+- [English Version](README-ENG.md)
+- [Versão em Português](README.md)
+
 ## ⚠️ Project Status
 
 **This project is still in development**. Some key features are not yet implemented, and new features are being added gradually. Feel free to explore the code and contribute!
