@@ -57,7 +57,7 @@ Para rodar este projeto em sua máquina, você precisará ter instalado:
    python main.py
    ```
 
-> **Nota**: Como o jogo ainda está em desenvolvimento, alguns recursos podem estar incompletos ou ausentes.
+   > **Nota**: Como o jogo ainda está em desenvolvimento, alguns recursos podem estar incompletos ou ausentes.
 
 ## 📂 Estrutura do Projeto
 
