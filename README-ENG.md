@@ -57,8 +57,6 @@ To run this project on your machine, you will need:
 
 > **Note**: As the game is still in development, some features may be incomplete or missing.
 
-## 📂 Project Structure
-
 ## 💡 Contributions
 
 Contributions are welcome! If you want to add new features, fix bugs, or improve the design, feel free to open a **pull request**.
