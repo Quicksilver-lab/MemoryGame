@@ -2,64 +2,71 @@ import pygame
 import random
 import tkinter as tk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 
-# Inicializando o Pygame
+# Initialize Pygame
 pygame.init()
 
-# Definindo as cores
+# colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-PINK = (0, 0, 255)
+PINK = (255, 192, 203)  # Light pink for card backs
 
-# Dimensões da tela
+# screen dimensions
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
-# Definindo a tela de jogo
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Steven Universe Memory Game")
 
-# Carregar a música tema
-pygame.mixer.music.load("Steven Universe_256k.mp3")  # Certifique-se de que o arquivo esteja no diretório correto
+# Load background music
+pygame.mixer.music.load("Steven Universe_256k.mp3")
 
-# Imagens de Steven Universe (substitua pelos ícones do tema)
-icon_paths = ["src/garnet.jpg", "src/perola.jpg", "src/Steven-Universe.jpg", "src/connie.jpg", "src/ametista.jpg", "src/pai steven.jpg"]
+# Load images
+icon_paths = ["src/garnet.jpg", "src/perola.jpg", "src/Steven-Universe.jpg", "src/connie.jpg", "src/ametista.jpg", "src/pai steven.jpg", "src/Quick.jpg", "src/evee.jpeg", "src/10.jpg", "src/12.jpg", "src/11.png", "src/Silver.png","src/420.png", "src/111.jpg", "src/121.jpg", "src/122.jpg", "src/1223.png", "src/234.png"]
 icons = [pygame.image.load(path) for path in icon_paths]
 
-# Função para embaralhar as cartas
+# Function to shuffle icons
 def shuffle_icons():
-    icons_pair = icons * 2  # Como é um jogo de memória, precisamos de pares de cada imagem
+    icons_pair = icons * 2 
     random.shuffle(icons_pair)
     return icons_pair
 
-# Classe do jogo
 class MemoryGame:
-    def __init__(self):
-        self.grid = [[None for _ in range(4)] for _ in range(3)]  # Grid de 4x3
+    def __init__(self, rows, cols, mode):
+        self.rows = rows
+        self.cols = cols
+        self.grid = [[None for _ in range(cols)] for _ in range(rows)]
         self.selected = []
         self.matched = []
+        self.mode = mode
+        self.moves = 0
+        self.start_time = pygame.time.get_ticks()
+        self.card_width = SCREEN_WIDTH // self.cols - 10
+        self.card_height = SCREEN_HEIGHT // self.rows - 10
         self.reset_grid()
 
     def reset_grid(self):
         shuffled_icons = shuffle_icons()
         index = 0
-        for i in range(3):
-            for j in range(4):
+        for i in range(self.rows):
+            for j in range(self.cols):
                 self.grid[i][j] = shuffled_icons[index]
                 index += 1
 
     def draw_grid(self):
         screen.fill(WHITE)
-        for i in range(3):
-            for j in range(4):
-                x = j * 150 + 25
-                y = i * 125 + 25
+        for i in range(self.rows):
+            for j in range(self.cols):
+                x = j * (self.card_width + 10) + 5
+                y = i * (self.card_height + 10) + 5
                 if (i, j) in self.matched or (i, j) in self.selected:
-                    screen.blit(self.grid[i][j], (x, y))
+                    screen.blit(pygame.transform.scale(self.grid[i][j], (self.card_width, self.card_height)), (x, y))
                 else:
-                    pygame.draw.rect(screen, PINK, (x, y, 100, 100))
+                    pygame.draw.rect(screen, BLACK, (x, y, self.card_width, self.card_height))
+                    pygame.draw.rect(screen, PINK, (x + 2, y + 2, self.card_width - 4, self.card_height - 4))  # Inner card color
         pygame.display.flip()
 
     def check_match(self):
@@ -67,45 +74,96 @@ class MemoryGame:
             if self.grid[self.selected[0][0]][self.selected[0][1]] == self.grid[self.selected[1][0]][self.selected[1][1]]:
                 self.matched.extend(self.selected)
             self.selected = []
+            self.moves += 1
 
-# Função para iniciar o jogo
-def start_game():
-    pygame.mixer.music.play(-1)  # Tocar a música tema repetidamente
-    game = MemoryGame()
-    clock = pygame.time.Clock()
-    running = True
+    def check_game_over(self):
+        return len(self.matched) == self.rows * self.cols
 
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+    def game_loop(self):
+        clock = pygame.time.Clock()
+        running = True
+
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if len(self.selected) < 2:
+                        mouse_x, mouse_y = event.pos
+                        row = (mouse_y - 5) // (self.card_height + 10)
+                        col = (mouse_x - 5) // (self.card_width + 10)
+                        if (row, col) not in self.selected and (row, col) not in self.matched:
+                            self.selected.append((row, col))
+
+            self.draw_grid()
+            self.check_match()
+
+            if self.check_game_over():
+                self.end_game()
                 running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if len(game.selected) < 2:
-                    mouse_x, mouse_y = event.pos
-                    row = mouse_y // 125
-                    col = mouse_x // 150
-                    if (row, col) not in game.selected and (row, col) not in game.matched:
-                        game.selected.append((row, col))
 
-        game.draw_grid()
-        game.check_match()
-        clock.tick(30)
+            if self.mode == "time":
+                elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000
+                if elapsed_time >= 60:  # Time limit of 60 seconds
+                    self.end_game()
+                    running = False
 
-    pygame.quit()
+            clock.tick(30)
 
-# Função para a interface inicial usando tkinter
+        pygame.quit()
+
+    def end_game(self):
+        elapsed_time = (pygame.time.get_ticks() - self.start_time) // 1000
+        result_message = f"Game Over!\nMoves: {self.moves}\nTime: {elapsed_time} seconds" if self.mode == "time" else f"Game Over!\nMoves: {self.moves}"
+        messagebox.showinfo("Game Over", result_message)
+        pygame.quit()
+        main_menu()
+
+def start_game(rows, cols, mode):
+    pygame.mixer.music.play(-1)
+    game = MemoryGame(rows, cols, mode)
+    game.game_loop()
+
 def main_menu():
     root = tk.Tk()
     root.title("Steven Universe Memory Game")
 
-    def on_start_click():
-        root.destroy()  # Fecha a janela inicial
-        start_game()
+    bg_img = Image.open("src/menu_background.png")
+    bg_img = ImageTk.PhotoImage(bg_img)
+    bg_label = tk.Label(root, image=bg_img)
+    bg_label.place(relwidth=1, relheight=1)
 
-    # Criando o botão para iniciar o jogo
-    start_button = tk.Button(root, text="Iniciar Jogo", command=on_start_click, height=2, width=20)
-    start_button.pack(pady=20)
+    def on_start_click(level, mode):
+        level_data = {
+            0: (3, 4),  # Easy
+            1: (4, 5),  # Medium
+            2: (5, 6)   # Hard
+        }
+        rows, cols = level_data.get(level, (3, 4))
+        root.destroy()
+        start_game(rows, cols, mode)
 
+    def show_level_selection(mode):
+        level_window = tk.Toplevel(root)
+        level_window.title("Select Difficulty")
+
+        tk.Label(level_window, text="Select Difficulty:", font=("Arial", 18)).pack(pady=20)
+        
+        tk.Button(level_window, text="Easy (3x4)", command=lambda: on_start_click(0, mode)).pack(pady=10)
+        tk.Button(level_window, text="Medium (4x5)", command=lambda: on_start_click(1, mode)).pack(pady=10)
+        tk.Button(level_window, text="Hard (5x6)", command=lambda: on_start_click(2, mode)).pack(pady=10)
+
+    def show_mode_selection():
+        mode_window = tk.Toplevel(root)
+        mode_window.title("Select Mode")
+
+        tk.Label(mode_window, text="Select Mode:", font=("Arial", 18)).pack(pady=20)
+
+        tk.Button(mode_window, text="Practice Mode", command=lambda: show_level_selection("practice")).pack(pady=10)
+        tk.Button(mode_window, text="Time Management", command=lambda: show_level_selection("time")).pack(pady=10)
+        tk.Button(mode_window, text="Move Limit", command=lambda: show_level_selection("moves")).pack(pady=10)
+
+    tk.Button(root, text="Start Game", command=show_mode_selection, height=2, width=20).pack(pady=20)
     root.mainloop()
 
 if __name__ == "__main__":
