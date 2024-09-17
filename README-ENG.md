@@ -11,6 +11,29 @@ Welcome to the **Steven Universe Memory Game**, a memory game project inspired b
 
 **This project is still in development**. Some key features are not yet implemented, and new features are being added gradually. Feel free to explore the code and contribute!
 
+## Testing
+
+| Status  | Task               | Notes                                                                 |
+|---------|--------------------|-----------------------------------------------------------------------|
+| ✅      | Initial Setup       | Completed the setup of Pygame and Tkinter version.                     |
+| ⚠️      | Port to Web Version | HTML, CSS, and JS port in progress with enhanced UI and animations.   |
+| ✅      | Game Logic          | Fully implemented game logic in both Pygame and JavaScript versions.  |
+| 🛠️      | Cross-browser Support | Need further testing to ensure compatibility on all major browsers.   |
+| ✅      | Image Optimization  | Optimized the images for faster loading and better performance.       |
+
+## Notes
+
+- The game includes **background music** and a **beautiful menu interface** with difficulty and mode selection.
+- The **web version** has a more polished UI with improved animations and interactivity.
+- The game is fully playable in **offline mode**.
+- Further improvements are planned for enhancing **mobile responsiveness** and **accessibility**.
+
+## Status
+
+- **Current Project Status**: In progress (Web version port nearing completion)
+- **Next Steps**: Add more characters, improve animations, and finalize the HTML/CSS version.
+
+
 ## 🎮 Planned Features
 
 - User-friendly graphical interface created with `tkinter`.
