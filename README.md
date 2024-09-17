@@ -1,4 +1,3 @@
-
 ---
 
 # Steven Universe Memory Game (Em Desenvolvimento)
@@ -38,19 +37,19 @@ Para rodar este projeto em sua máquina, você precisará ter instalado:
 1. Clone este repositório:
 
    ```bash
-   git clone https://github.com/seu-usuario/steven-universe-memory-game.git
+   git clone https://github.com/EveeSilvaa/MemoryGame
    ```
 
 2. Entre no diretório do projeto:
 
    ```bash
-   cd steven-universe-memory-game
+   cd MemoryGame
    ```
 
 3. Execute o jogo:
 
    ```bash
-   python memory_game.py
+   python main.py
    ```
 
 > **Nota**: Como o jogo ainda está em desenvolvimento, alguns recursos podem estar incompletos ou ausentes.
@@ -87,10 +86,6 @@ Este projeto está licenciado sob a [Licença MIT](LICENSE).
 
 ### ⭐ Agradecimentos
 
-Obrigado por conferir este projeto! *Steven Universe* é uma inspiração para muitos de nós, e espero que este jogo traga um pouco da magia desse universo para os jogadores.
+Obrigado por conferir este projeto! _Steven Universe_ é uma inspiração para muitos de nós, e espero que este jogo traga um pouco da magia desse universo para os jogadores.
 
 ---
-
-
-Obrigado por conferir este projeto! Steven Universe é uma inspiração para muitos de nós, e espero que este jogo traga um pouco da magia desse universo para os jogadores.
-
